@@ -1,0 +1,412 @@
+# 🎮 Cross-Platform 2D Game Foundation (Android / iOS / Windows)
+
+> [!IMPORTANT]
+> **Do this BEFORE writing any game logic.** Changing resolution strategy, camera setup, or UI scaling after development has started means rewriting layouts, repositioning objects, and debugging on every device again.
+
+---
+
+## 1. Choose a Reference Resolution
+
+Pick **one resolution** as your design target. Everything you build will be authored at this resolution, then scaled to fit other devices.
+
+| Reference Resolution | Aspect Ratio | Why |
+|---|---|---|
+| **1920 × 1080** | 16:9 | Most common across all platforms. Best starting point. |
+| 1080 × 1920 | 9:16 | Only if your game is **portrait-only** (like a mobile card game). |
+
+> [!TIP]
+> **For a landscape 2D game, use `1920 × 1080` as your reference.**
+> For a portrait 2D game, use `1080 × 1920`.
+
+### Unity Setup
+1. Go to **Game View** → click the aspect ratio dropdown → **+** → add `1920x1080`
+2. Design your entire game at this resolution first
+
+---
+
+## 2. Camera Setup (The Most Critical Step)
+
+For 2D games, the **Orthographic Camera** is your world ruler. Its `size` determines how many world units are visible vertically.
+
+### The Formula
+
+```
+Orthographic Size = Reference Height / (2 × PPU)
+```
+
+- **PPU** (Pixels Per Unit) = how many pixels map to 1 Unity unit. Default is `100`.
+- For 1080p: `Orthographic Size = 1080 / (2 × 100) = 5.4`
+
+### Unity Setup
+```
+Main Camera → Projection: Orthographic
+Main Camera → Size: 5.4
+Main Camera → Background: Your background color
+```
+
+### What This Means
+- The camera will always show **10.8 units vertically** (5.4 above + 5.4 below center)
+- Horizontally, it shows `Screen Width / PPU` units — this **changes per device**
+- On a 16:9 screen: `19.2 units wide`. On a 4:3 iPad: `14.4 units wide`
+
+> [!CAUTION]
+> **The horizontal extent changes across devices.** This is the #1 source of cross-platform bugs. You MUST handle this (see Section 4).
+
+---
+
+## 3. Pixels Per Unit (PPU) — Get This Right
+
+PPU defines how your sprites map to the game world. **Set this once and never change it.**
+
+| PPU | Best For | Sprite Size for 1 Unit |
+|---|---|---|
+| 100 (default) | Most 2D games | 100×100 px sprite = 1×1 unit |
+| 32 | Pixel art games | 32×32 px sprite = 1×1 unit |
+| 16 | Very chunky pixel art | 16×16 px sprite = 1×1 unit |
+
+### Unity Setup
+- Select your sprite → **Inspector** → **Pixels Per Unit**: set to your chosen value
+- **All sprites must use the same PPU** for consistency
+
+> [!TIP]
+> If you're making a non-pixel-art 2D game, stick with **PPU = 100**. It's the Unity default and everything "just works."
+
+---
+
+## 4. Handling Different Aspect Ratios (THE BIG PROBLEM)
+
+Real devices have wildly different aspect ratios:
+
+| Device | Aspect Ratio | Difference from 16:9 |
+|---|---|---|
+| Most Android phones | 16:9, 18:9, 19.5:9, 20:9 | Taller/narrower |
+| iPhone 15 | 19.5:9 | Much taller |
+| iPad | 4:3 | Much wider |
+| Windows PC | 16:9, 16:10, 21:9 | Wider |
+
+### Strategy: **Lock Vertical, Adapt Horizontal**
+
+This is the safest approach for most 2D games:
+
+```
+✅ Vertical height is ALWAYS the same (camera size is fixed)
+✅ Wider screens see MORE of the world on the sides
+✅ Narrower screens see LESS on the sides
+```
+
+### How to Implement
+
+#### Option A: Expand the Visible Area (Recommended for most games)
+Let the camera show more/less of the world horizontally. Place your **critical gameplay** in the center, and use **non-essential decoration** on the edges.
+
+```
+┌─────────────────────────────────┐  ← Ultra-wide (21:9)
+│  decor  │   GAMEPLAY AREA   │  decor  │
+│         │   (always visible) │         │
+└─────────────────────────────────┘
+
+    ┌───────────────────────┐  ← iPad (4:3)
+    │   GAMEPLAY AREA       │
+    │   (always visible)    │
+    └───────────────────────┘
+```
+
+**Implementation Script — `CameraScaler.cs`:**
+```csharp
+using UnityEngine;
+
+public class CameraScaler : MonoBehaviour
+{
+    [Header("Reference Resolution")]
+    public float referenceWidth = 1920f;
+    public float referenceHeight = 1080f;
+    public float referenceOrthographicSize = 5.4f;
+
+    private Camera cam;
+
+    void Awake()
+    {
+        cam = GetComponent<Camera>();
+        AdjustCamera();
+    }
+
+    void AdjustCamera()
+    {
+        float referenceAspect = referenceWidth / referenceHeight;
+        float currentAspect = (float)Screen.width / Screen.height;
+
+        if (currentAspect < referenceAspect)
+        {
+            // Device is narrower than reference (e.g., tall phone)
+            // Increase orthographic size to maintain width
+            cam.orthographicSize = referenceOrthographicSize * 
+                                   (referenceAspect / currentAspect);
+        }
+        else
+        {
+            // Device is wider than reference (e.g., iPad, ultrawide)
+            // Keep the orthographic size as-is; more world is visible
+            cam.orthographicSize = referenceOrthographicSize;
+        }
+    }
+}
+```
+
+> [!NOTE]
+> The script above ensures **all gameplay content is always visible**. On narrow screens, it zooms out slightly. On wide screens, you just see more.
+
+#### Option B: Letterbox (Pillarbox)
+Force a fixed aspect ratio and add black bars. Simpler but looks less polished.
+
+```csharp
+// Add black bars to enforce 16:9
+float targetAspect = 16f / 9f;
+float windowAspect = (float)Screen.width / Screen.height;
+float scaleHeight = windowAspect / targetAspect;
+
+if (scaleHeight < 1.0f)
+{
+    Rect rect = cam.rect;
+    rect.width = 1.0f;
+    rect.height = scaleHeight;
+    rect.x = 0;
+    rect.y = (1.0f - scaleHeight) / 2.0f;
+    cam.rect = rect;
+}
+else
+{
+    float scaleWidth = 1.0f / scaleHeight;
+    Rect rect = cam.rect;
+    rect.width = scaleWidth;
+    rect.height = 1.0f;
+    rect.x = (1.0f - scaleWidth) / 2.0f;
+    rect.y = 0;
+    cam.rect = rect;
+}
+```
+
+---
+
+## 5. UI / Canvas Setup
+
+UI (health bars, score, buttons, menus) must be handled **separately** from the game world.
+
+### Canvas Scaler Settings
+
+```
+Canvas → Render Mode: Screen Space - Overlay
+Canvas Scaler → UI Scale Mode: Scale With Screen Size
+Canvas Scaler → Reference Resolution: 1920 x 1080
+Canvas Scaler → Screen Match Mode: Match Width Or Height
+Canvas Scaler → Match: 0.5 (balanced) or 1 (match height for landscape)
+```
+
+### Anchoring Rules (CRITICAL)
+
+| UI Element | Anchor To | Example |
+|---|---|---|
+| Score text | Top-left or top-center | Stays at top on all screens |
+| Health bar | Bottom-center | Stays at bottom |
+| Pause button | Top-right | Stays in corner |
+| Center popup | Center | Always centered |
+
+```
+Always use ANCHORS, never absolute positions for UI.
+   ┌──────────────────────────────┐
+   │ Score          ⏸ Pause       │  ← Anchored to corners
+   │                              │
+   │                              │
+   │        [Game World]          │
+   │                              │
+   │                              │
+   │     ❤❤❤  Health Bar          │  ← Anchored to bottom
+   └──────────────────────────────┘
+```
+
+> [!WARNING]
+> **Never position UI elements using Transform (X, Y) values.** Always use **RectTransform anchors**. If you skip this, your UI WILL break on different screen sizes.
+
+---
+
+## 6. Safe Area (Mobile Notches & Rounded Corners)
+
+Modern phones have notches, punch-holes, and rounded corners. Your UI must avoid these areas.
+
+### Safe Area Script — `SafeAreaHandler.cs`
+
+```csharp
+using UnityEngine;
+
+public class SafeAreaHandler : MonoBehaviour
+{
+    private RectTransform panelRect;
+    private Rect lastSafeArea = Rect.zero;
+
+    void Awake()
+    {
+        panelRect = GetComponent<RectTransform>();
+        ApplySafeArea();
+    }
+
+    void ApplySafeArea()
+    {
+        Rect safeArea = Screen.safeArea;
+        if (safeArea == lastSafeArea) return;
+        lastSafeArea = safeArea;
+
+        Vector2 anchorMin = safeArea.position;
+        Vector2 anchorMax = safeArea.position + safeArea.size;
+
+        anchorMin.x /= Screen.width;
+        anchorMin.y /= Screen.height;
+        anchorMax.x /= Screen.width;
+        anchorMax.y /= Screen.height;
+
+        panelRect.anchorMin = anchorMin;
+        panelRect.anchorMax = anchorMax;
+    }
+}
+```
+
+### How to Use
+1. Create a **Panel** under your Canvas called `SafeAreaPanel`
+2. Attach `SafeAreaHandler.cs` to it
+3. Put **ALL your UI elements inside this panel**
+4. The panel auto-shrinks to avoid notches/rounded corners
+
+---
+
+## 7. Input Abstraction
+
+You need ONE input system that works across touch, keyboard, mouse, and gamepad.
+
+### Use Unity's New Input System
+
+```
+Window → Package Manager → Unity Registry → Input System → Install
+```
+
+### Why
+| Platform | Input Method |
+|---|---|
+| Android/iOS | Touch |
+| Windows | Keyboard + Mouse + Gamepad |
+| All | Unity Input System handles all via Action Maps |
+
+### Setup Steps
+1. Create an **Input Action Asset** (right-click → Create → Input Actions)
+2. Define **Action Maps**: `Player`, `UI`
+3. Define **Actions**: `Move`, `Jump`, `Pause`
+4. Add **Bindings** for each action:
+   - `Move` → Keyboard WASD + Gamepad Left Stick + Touch Joystick
+   - `Jump` → Keyboard Space + Gamepad South Button + Touch Tap
+
+> [!TIP]
+> **Never use `Input.GetKey()` or `Input.GetAxis()` directly.** These only work with keyboard/gamepad and make adding touch support painful later.
+
+---
+
+## 8. Project Settings Checklist
+
+### Player Settings (Edit → Project Settings → Player)
+
+| Setting | Value | Why |
+|---|---|---|
+| Default Orientation | Landscape Left | Or your chosen orientation |
+| Auto-rotate | Enable only your supported orientations | Prevents weird rotations |
+| Default Resolution (Windows) | 1920 × 1080 | Matches your reference |
+| Allow Fullscreen | Yes | Windows |
+| Target Frame Rate | 60 | `Application.targetFrameRate = 60;` |
+
+### Quality Settings
+| Setting | Value | Why |
+|---|---|---|
+| VSync | Don't Sync (mobile) | Use `targetFrameRate` instead |
+| Anti-aliasing | 2x or off (mobile) | Performance |
+| Texture Quality | Full Res | Don't downscale sprites |
+
+### Graphics
+- Use **URP (Universal Render Pipeline)** — it's optimized for all platforms
+- If starting a new project, choose the **2D (URP)** template
+
+---
+
+## 9. Folder Structure (Set Up Now, Thank Yourself Later)
+
+```
+Assets/
+├── _Project/                  ← All your game content
+│   ├── Art/
+│   │   ├── Sprites/
+│   │   ├── Animations/
+│   │   └── UI/
+│   ├── Audio/
+│   │   ├── Music/
+│   │   └── SFX/
+│   ├── Prefabs/
+│   │   ├── Player/
+│   │   ├── Enemies/
+│   │   └── UI/
+│   ├── Scenes/
+│   │   ├── MainMenu.unity
+│   │   ├── Gameplay.unity
+│   │   └── Loading.unity
+│   ├── Scripts/
+│   │   ├── Core/              ← Camera, Input, GameManager
+│   │   ├── Player/
+│   │   ├── Enemies/
+│   │   ├── UI/
+│   │   └── Utils/
+│   ├── Input/                 ← Input Action Assets
+│   └── Settings/              ← Render pipeline, quality profiles
+├── Plugins/                   ← Third-party SDKs
+└── StreamingAssets/           ← Platform-specific data
+```
+
+---
+
+## 10. The Exact First Steps (Do This In Order)
+
+```mermaid
+graph TD
+    A["1. Create Unity Project<br/>(2D URP Template)"] --> B["2. Set Reference Resolution<br/>(1920×1080 in Game View)"]
+    B --> C["3. Configure Camera<br/>(Ortho, Size=5.4, add CameraScaler.cs)"]
+    C --> D["4. Set Up Canvas<br/>(Scale With Screen Size, 1920×1080 ref)"]
+    D --> E["5. Add Safe Area Panel<br/>(SafeAreaHandler.cs)"]
+    E --> F["6. Install New Input System<br/>(Create Action Maps)"]
+    F --> G["7. Create Folder Structure"]
+    G --> H["8. Configure Player Settings<br/>(Orientation, Resolution, FPS)"]
+    H --> I["9. Test on Multiple Resolutions<br/>(16:9, 4:3, 19.5:9, 21:9)"]
+    I --> J["10. NOW Start Building Your Game ✅"]
+```
+
+---
+
+## Quick Test Checklist
+
+Before writing any game code, verify your setup by adding a simple colored square and UI text, then test these resolutions in the **Game View**:
+
+| Test Resolution | Aspect | What to Check |
+|---|---|---|
+| 1920 × 1080 | 16:9 | Everything looks as designed |
+| 2560 × 1440 | 16:9 | Still looks correct |
+| 1080 × 1920 | 9:16 | (Skip if landscape-only) |
+| 2048 × 1536 | 4:3 | iPad — UI still anchored correctly |
+| 2532 × 1170 | 19.5:9 | iPhone — no clipping |
+| 2560 × 1080 | 21:9 | Ultrawide — no gaps |
+
+> [!IMPORTANT]
+> If something breaks at any of these resolutions, **fix it now**. It only gets harder to fix later.
+
+---
+
+## Summary: What You're Protecting Against
+
+| Problem | Solution |
+|---|---|
+| Sprites getting cut off on narrow phones | `CameraScaler.cs` adapts the view |
+| UI overlapping notches | `SafeAreaHandler.cs` |
+| UI breaking on different screens | Canvas Scaler + Anchors |
+| Touch not working on mobile | New Input System |
+| Inconsistent sprite sizes | Fixed PPU across all sprites |
+| Spaghetti project later | Organized folder structure from day 1 |

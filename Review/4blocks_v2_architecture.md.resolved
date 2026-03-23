@@ -1,0 +1,217 @@
+# 4 Blocks v2 — Architecture Blueprint
+
+> Reference document for building the next prototype of the sliding-block puzzle game.
+
+## Game Concept
+A **2D grid-based sliding-block puzzle**. 4 colored blocks inside a walled arena. Player chooses a direction (WASD) and **all blocks slide simultaneously** in that direction — each block slides until it individually hits a wall or another stopped block. Goal: move all blocks to their target positions.
+
+---
+
+## Architecture Overview
+
+```mermaid
+flowchart TB
+    subgraph Core
+        GM[GameManager\nSingleton]
+        LM[LevelManager]
+        LD[LevelData\nScriptableObject]
+    end
+
+    subgraph Gameplay
+        B[Block ×4]
+        WA[Walls\nCompositeCollider2D]
+        GR[GridSystem]
+    end
+
+    subgraph Input
+        IA[PlayerInputActions\nNew Input System]
+    end
+
+    subgraph UI
+        HUD[HUD\nMoves · Level · Restart]
+        WS[WinScreen]
+    end
+
+    IA --> GM
+    GM --> B
+    GM --> LM
+    LM --> LD
+    GM --> GR
+    GM --> HUD
+    GM --> WS
+    B --> WA
+    B --> GR
+```
+
+---
+
+## Component Specifications
+
+### 1. GameManager (Singleton MonoBehaviour)
+**Purpose**: Centralized controller — handles input, game state, block selection.
+
+| Responsibility | Details |
+|---|---|
+| **Game State** | Enum: `Playing`, `Won`, `Paused` |
+| **Input handling** | Reads WASD once per frame, sends to **all blocks** simultaneously |
+| **Move tracking** | Increments on each successful slide (one WASD press = one move) |
+| **Win check** | After **all blocks** stop, check if all blocks are on targets |
+| **Undo system** | Stack of [(allBlockPositions[])](file:///c:/Users/mijot/OneDrive/Documents/unity/4%20Blocks%2000/Assets/PlayerInputActions.cs#265-269) snapshots |
+| **Prevents input during slide** | Global `isAnyBlockMoving` check — no new input until all 4 blocks have stopped |
+
+### 2. Block (MonoBehaviour, on each block GameObject)
+**Purpose**: Handles sliding movement for one block. Does NOT read input — receives slide commands from GameManager.
+
+| Property / Method | Details |
+|---|---|
+| `SlideInDirection(Vector2 dir)` | Public method called by GameManager |
+| `IsSliding` | Read-only property |
+| `OnStopped` event | Fires when block finishes sliding (GameManager listens) |
+| `SnapToGrid()` | Rounds position to nearest grid unit |
+| `GridPosition` | Returns current snapped `Vector2Int` position |
+
+**Movement approach**: **Grid-based with physics**.
+- Use `rb.Cast()` to pre-calculate how far the block can slide
+- Use `rb.MovePosition()` or lerp to slide to the target grid cell
+- Snap to exact grid on arrival
+
+### 3. GridSystem (MonoBehaviour or static utility)
+**Purpose**: Manages the grid coordinate system.
+
+| Method | Details |
+|---|---|
+| `WorldToGrid(Vector3)` → `Vector2Int` | Converts world position to grid coords |
+| `GridToWorld(Vector2Int)` → `Vector3` | Converts grid coords to world position |
+| `IsOccupied(Vector2Int)` → `bool` | Checks if a grid cell has a block or wall |
+| `GetSlideDestination(Vector2Int start, Vector2 dir)` → `Vector2Int` | Calculates where a block would stop |
+
+### 4. LevelData (ScriptableObject)
+**Purpose**: Stores level configuration — reusable, easy to create new levels.
+
+| Field | Type | Details |
+|---|---|---|
+| `levelName` | `string` | Display name |
+| `gridWidth` / `gridHeight` | `int` | Arena dimensions |
+| `blockStartPositions` | `Vector2Int[4]` | Where blocks spawn |
+| `blockTargetPositions` | `Vector2Int[4]` | Win condition positions |
+| `wallPositions` | `Vector2Int[]` | Interior wall cells |
+
+### 5. LevelManager (MonoBehaviour)
+**Purpose**: Loads LevelData, spawns blocks and walls, handles level transitions.
+
+### 6. Walls
+**Same proven approach as v1:**
+- Parent object with `Rigidbody2D` (Static) + `CompositeCollider2D`
+- Children: `BoxCollider2D` (CompositeOperation = Merge) + `SpriteRenderer`
+- `NoFriction` physics material
+
+---
+
+## Input Setup
+
+### PlayerInputActions (New Input System)
+| Action Map | Action | Type | Bindings |
+|---|---|---|---|
+| **Player** | Move | Value (Vector2) | WASD |
+| **Player** | Undo | Button | Z / Ctrl+Z |
+| **Player** | Restart | Button | R |
+
+---
+
+## Physics Configuration (Same as v1, proven working)
+
+| Setting | Blocks | Walls |
+|---|---|---|
+| Body Type | Dynamic | Static |
+| Gravity Scale | 0 | N/A |
+| Collision Detection | Continuous | Discrete |
+| Constraints | Freeze Rotation Z | Freeze Rotation Z |
+| Physics Material | NoFriction (friction=0, bounce=0) | NoFriction |
+| Collider Size | 0.95 × 0.95 | 1 × 1 |
+
+---
+
+## File Structure
+
+```
+Assets/
+├── Scripts/
+│   ├── Core/
+│   │   ├── GameManager.cs
+│   │   └── GridSystem.cs
+│   ├── Gameplay/
+│   │   ├── Block.cs
+│   │   └── LevelManager.cs
+│   ├── Data/
+│   │   └── LevelData.cs          (ScriptableObject)
+│   ├── UI/
+│   │   ├── HUDController.cs
+│   │   └── WinScreenController.cs
+│   └── Input/
+│       ├── PlayerInputActions.inputactions
+│       └── PlayerInputActions.cs  (auto-generated)
+├── Data/
+│   └── Levels/
+│       ├── Level01.asset
+│       ├── Level02.asset
+│       └── ...
+├── Materials/
+│   └── NoFriction.physicsMaterial2D
+├── Prefabs/
+│   ├── Block.prefab
+│   └── Wall.prefab
+└── Scenes/
+    └── Game.unity
+```
+
+---
+
+## Block Colors (from v1)
+
+| Block | Color (RGBA) | Description |
+|---|---|---|
+| Block1 | [(0, 1, 0.25, 0.59)](file:///c:/Users/mijot/OneDrive/Documents/unity/4%20Blocks%2000/Assets/PlayerInputActions.cs#265-269) | Semi-transparent green |
+| Block2 | [(1, 0, 0.21, 0.59)](file:///c:/Users/mijot/OneDrive/Documents/unity/4%20Blocks%2000/Assets/PlayerInputActions.cs#265-269) | Semi-transparent red |
+| Block3 | [(0, 0.39, 1, 0.59)](file:///c:/Users/mijot/OneDrive/Documents/unity/4%20Blocks%2000/Assets/PlayerInputActions.cs#265-269) | Semi-transparent blue |
+| Block4 | [(0.99, 1, 0, 0.59)](file:///c:/Users/mijot/OneDrive/Documents/unity/4%20Blocks%2000/Assets/PlayerInputActions.cs#265-269) | Semi-transparent yellow |
+| Walls | [(0.37, 0.37, 0.37, 1)](file:///c:/Users/mijot/OneDrive/Documents/unity/4%20Blocks%2000/Assets/PlayerInputActions.cs#265-269) | Solid dark gray |
+
+---
+
+## Game Flow
+
+```mermaid
+flowchart TD
+    A[Game Start] --> B[LevelManager loads LevelData]
+    B --> C[Spawn Walls + Blocks at start positions]
+    C --> D[GameState = Playing]
+    D --> E{Player Input}
+    E -- WASD --> F{Any block sliding?}
+    F -- No --> G[Save positions to undo stack]
+    G --> H[All 4 Blocks.SlideInDirection]
+    H --> I[Each block slides until hitting wall/block]
+    I --> J[Each block: SnapToGrid + OnStopped]
+    J --> K{All 4 blocks stopped?}
+    K -- No --> J
+    K -- Yes --> L[GameManager: moveCount++]
+    L --> M{All blocks on targets?}
+    M -- Yes --> N[GameState = Won → WinScreen]
+    M -- No --> E
+    E -- Z --> O[Undo last move - restore all 4 positions]
+    E -- R --> P[Restart level]
+    F -- Yes --> E
+```
+
+---
+
+## Key Differences from v1
+
+| Aspect | v1 (Current) | v2 (New) |
+|---|---|---|
+| Input handling | Each block reads input independently | GameManager reads once, sends to **all blocks** |
+| Movement | Physics velocity-based | Grid-based with position snapping |
+| Core mechanic | All move together (but independently processed) | All move together (centrally coordinated by GameManager) |
+| Win condition | None | Check target positions after all blocks stop |
+| Level data | Hardcoded in scene | ScriptableObject |
+| Undo | None | Move history stack (snapshots all 4 positions) |
+| File organization | All scripts in root Assets | Organized in subfolders |
