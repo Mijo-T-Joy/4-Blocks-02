@@ -31,11 +31,14 @@ public class LevelManager : MonoBehaviour
     [Tooltip("Prefab for a sliding block")]
     public GameObject blockPrefab;
 
+    [Tooltip("Prefab for a target indicator")]
+    public GameObject targetPrefab;
+
     [Header("Block Colors (Matches v1 Architecture)")]
-    public Color block1Color = new Color(0f, 1f, 0.25f, 0.59f);     // Green
-    public Color block2Color = new Color(1f, 0f, 0.21f, 0.59f);     // Red
-    public Color block3Color = new Color(0f, 0.39f, 1f, 0.59f);     // Blue
-    public Color block4Color = new Color(0.99f, 1f, 0f, 0.59f);     // Yellow
+    public Color block1Color = new Color(0f, 1f, 0.25f, 1f);     // Green
+    public Color block2Color = new Color(1f, 0f, 0.21f, 1f);     // Red
+    public Color block3Color = new Color(0f, 0.39f, 1f, 1f);     // Blue
+    public Color block4Color = new Color(0.99f, 1f, 0f, 1f);     // Yellow
     public Color wallColor = new Color(0.37f, 0.37f, 0.37f, 1f); // Dark Gray
 
     // ──────────────────────────────────────────────
@@ -46,6 +49,7 @@ public class LevelManager : MonoBehaviour
 
     // Keep track of spawned objects so we can destroy them on reload
     private List<GameObject> spawnedWalls = new List<GameObject>();
+    private List<GameObject> spawnedTargets = new List<GameObject>();
     private Block[] spawnedBlocks = new Block[4];
 
     // ──────────────────────────────────────────────
@@ -63,6 +67,7 @@ public class LevelManager : MonoBehaviour
         ClearLevel();
         SpawnWalls(levelData, gridSystem);
         SpawnBlocks(levelData, gridSystem);
+        SpawnTargets(levelData, gridSystem);
     }
 
     /// <summary>
@@ -109,6 +114,12 @@ public class LevelManager : MonoBehaviour
             if (wall != null) Destroy(wall);
         }
         spawnedWalls.Clear();
+
+        foreach (GameObject target in spawnedTargets)
+        {
+            if (target != null) Destroy(target);
+        }
+        spawnedTargets.Clear();
 
         for (int i = 0; i < 4; i++)
         {
@@ -205,9 +216,64 @@ public class LevelManager : MonoBehaviour
 
             // Color the block
             SpriteRenderer sr = blockObj.GetComponentInChildren<SpriteRenderer>();
-            if (sr != null) sr.color = colors[i];
+            if (sr != null) 
+            {
+                Color c = colors[i];
+                c.a = 1f; // Force 100% opacity to prevent washed-out colors against white background
+                sr.color = c;
+            }
 
             spawnedBlocks[i] = block;
+        }
+    }
+
+    /// <summary>
+    /// Spawns un-collidable visual indicators for the target positions.
+    /// Colored light gray if any block can go there, or specific lighter colors if exact match is required.
+    /// </summary>
+    private void SpawnTargets(LevelData level, GridSystem grid)
+    {
+        if (targetPrefab == null)
+        {
+            Debug.LogError("LevelManager: Target Prefab is not assigned!");
+            return;
+        }
+
+        Color[] exactColors = { block1Color, block2Color, block3Color, block4Color };
+        
+        // Since background is white, use a darker gray for "any target" so it stands out
+        Color anyColor = new Color(0.3f, 0.3f, 0.3f, 0.6f); 
+
+        for (int i = 0; i < 4; i++)
+        {
+            Vector2Int targetPos = level.blockTargetPositions[i];
+            Vector2Int gridPos = new Vector2Int(targetPos.x + 1, targetPos.y + 1);
+            Vector3 worldPos = grid.GridToWorld(gridPos);
+
+            GameObject targetObj = Instantiate(targetPrefab, worldPos, Quaternion.identity, transform);
+            targetObj.name = $"Target_0{i + 1}";
+
+            SpriteRenderer sr = targetObj.GetComponentInChildren<SpriteRenderer>();
+            if (sr != null)
+            {
+                // Place target visuals slightly behind blocks so blocks render on top
+                sr.sortingOrder = -5;
+
+                if (level.requireExactTargetMatch)
+                {
+                    // Exact match: matching color, but slightly transparent
+                    Color c = exactColors[i];
+                    c.a = 0.75f; // Increased alpha from 0.35f to 0.75f to be visible on white bg
+                    sr.color = c;
+                }
+                else
+                {
+                    // Any block: generic gray color
+                    sr.color = anyColor;
+                }
+            }
+
+            spawnedTargets.Add(targetObj);
         }
     }
 }

@@ -69,8 +69,13 @@ public class GameManager : MonoBehaviour
     public WinScreenController winScreenController;
 
     [Header("Level")]
-    [Tooltip("The level to load when the game starts")]
+    [Tooltip("The level to load when the game starts (fallback if sequence is empty)")]
     public LevelData startingLevel;
+
+    [Tooltip("Drag all Level_01, Level_02, etc. here in order!")]
+    public LevelData[] levelSequence;
+    
+    private int currentLevelIndex = -1;
 
     // ──────────────────────────────────────────────
     //  RUNTIME STATE
@@ -147,14 +152,37 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
-        // Load the starting level
-        if (startingLevel != null)
+        // If we have a sequence defined, start at index 0
+        if (levelSequence != null && levelSequence.Length > 0)
         {
+            currentLevelIndex = 0;
+
+            // If a specific starting level is assigned, try to find it in the sequence
+            if (startingLevel != null)
+            {
+                int index = System.Array.IndexOf(levelSequence, startingLevel);
+                if (index != -1)
+                {
+                    currentLevelIndex = index; // Found it! Start sequence from here.
+                }
+                else
+                {
+                    // It's not in the sequence at all, so just load it in isolation
+                    LoadLevel(startingLevel);
+                    return;
+                }
+            }
+
+            LoadLevel(levelSequence[currentLevelIndex]);
+        }
+        else if (startingLevel != null)
+        {
+            // Fallback for testing a single level
             LoadLevel(startingLevel);
         }
         else
         {
-            Debug.LogWarning("GameManager: No starting level assigned!");
+            Debug.LogWarning("GameManager: No starting level or sequence assigned!");
         }
     }
 
@@ -393,21 +421,53 @@ public class GameManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Checks if every block is sitting on its target position.
-    /// If so, the player wins!
+    /// Checks if every block is sitting on its appropriate target position.
+    /// Depending on LevelData.requireExactTargetMatch, this either requires
+    /// Block 0 on Target 0 or just any block on any target.
     /// </summary>
     private void CheckWinCondition()
     {
         if (levelManager == null) return;
 
         Vector2Int[] targets = levelManager.GetTargetGridPositions();
-        if (targets == null) return;
+        if (targets == null || targets.Length == 0) return;
 
-        for (int i = 0; i < blocks.Length; i++)
+        bool requireExact = false;
+        if (levelManager.CurrentLevelData != null)
         {
-            if (blocks[i].GridPosition != targets[i])
+            requireExact = levelManager.CurrentLevelData.requireExactTargetMatch;
+        }
+
+        if (requireExact)
+        {
+            // Each block must be on its exact corresponding target
+            for (int i = 0; i < blocks.Length; i++)
             {
-                return; // At least one block is not on its target
+                if (blocks[i].GridPosition != targets[i])
+                {
+                    return; // At least one block is not on its specific target
+                }
+            }
+        }
+        else
+        {
+            // Any block can be on any target
+            for (int i = 0; i < blocks.Length; i++)
+            {
+                bool isOnAnyTarget = false;
+                for (int j = 0; j < targets.Length; j++)
+                {
+                    if (blocks[i].GridPosition == targets[j])
+                    {
+                        isOnAnyTarget = true;
+                        break;
+                    }
+                }
+
+                if (!isOnAnyTarget)
+                {
+                    return; // At least one block is not on any target
+                }
             }
         }
 
@@ -486,8 +546,17 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public void LoadNextLevel()
     {
-        // For now, just restart the same level
-        // TODO: Implement level progression (array of LevelData assets)
-        RestartLevel();
+        // Check if we have a sequence and aren't at the very end
+        if (levelSequence != null && levelSequence.Length > 0 && currentLevelIndex < levelSequence.Length - 1)
+        {
+            currentLevelIndex++;
+            LoadLevel(levelSequence[currentLevelIndex]);
+        }
+        else
+        {
+            // No more levels, or sequence isn't set up! Just restart current level.
+            Debug.Log("You beat all levels! Restarting the current one.");
+            RestartLevel();
+        }
     }
 }

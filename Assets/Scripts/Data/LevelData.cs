@@ -27,6 +27,9 @@ public class LevelData : ScriptableObject
     [Tooltip("Display name shown in the HUD")]
     public string levelName = "Level 01";
 
+    [Tooltip("If true, each block MUST reach its specific target (Block 1 to Target 1, etc.). If false, any block can reach any target.")]
+    public bool requireExactTargetMatch = false;
+
     [Header("Grid Dimensions")]
     [Tooltip("Width of the play area in grid cells")]
     public int gridWidth = 5;

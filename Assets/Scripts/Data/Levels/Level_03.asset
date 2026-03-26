@@ -10,21 +10,22 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9c469380e17fe78409d4473d5d83acf7, type: 3}
-  m_Name: Level_01
+  m_Name: Level_03
   m_EditorClassIdentifier: Assembly-CSharp::LevelData
-  levelName: Level 1
+  levelName: Level 3
   requireExactTargetMatch: 0
   gridWidth: 5
   gridHeight: 5
   blockStartPositions:
-  - {x: 1, y: 1}
+  - {x: 0, y: 2}
+  - {x: 4, y: 0}
+  - {x: 0, y: 3}
   - {x: 1, y: 3}
-  - {x: 3, y: 1}
-  - {x: 3, y: 3}
   blockTargetPositions:
-  - {x: 0, y: 1}
+  - {x: 1, y: 2}
   - {x: 0, y: 2}
   - {x: 0, y: 3}
-  - {x: 0, y: 4}
+  - {x: 1, y: 3}
   wallPositions:
-  - {x: 0, y: 0}
+  - {x: 1, y: 4}
+  - {x: 0, y: 4}
