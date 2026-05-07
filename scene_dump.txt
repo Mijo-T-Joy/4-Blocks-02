@@ -5,52 +5,61 @@
   [C] AudioListener
   [C] CameraScaler
   [C] SwipeDetector
-- Canvas (Pos: (540.00, 1140.00, 0.00))
+- Canvas (Pos: (585.00, 1266.00, 0.00))
   [C] RectTransform
   [C] Canvas
   [C] CanvasScaler
   [C] GraphicRaycaster
-  - HUD_Panel (Pos: (540.00, 1140.00, 0.00))
+  - HUD_Panel (Pos: (585.00, 1266.00, 0.00))
     [C] RectTransform
     [C] CanvasRenderer
     [C] Image
     [C] HUDController
-    - MovesText (Pos: (250.00, 2100.00, 0.00))
+    - MovesText (Pos: (270.83, 2337.00, 0.00))
       [C] RectTransform
       [C] CanvasRenderer
       [C] TextMeshProUGUI
-    - LevelNameText (Pos: (830.00, 2100.00, 0.00))
+    - LevelNameText (Pos: (899.17, 2337.00, 0.00))
       [C] RectTransform
       [C] CanvasRenderer
       [C] TextMeshProUGUI
-  - WinScreen_Panel (Pos: (540.00, 1140.00, 0.00))
+  - WinScreen_Panel (Pos: (585.00, 1266.00, 0.00))
     [C] RectTransform
     [C] CanvasRenderer
     [C] Image
     [C] WinScreenController
-    - TitleText (Pos: (540.00, 1340.00, 0.00))
+    - TitleText (Pos: (585.00, 1482.67, 0.00))
       [C] RectTransform
       [C] CanvasRenderer
       [C] TextMeshProUGUI
-    - FinalMovesText (Pos: (540.00, 1874.00, 0.00))
+    - FinalMovesText (Pos: (585.00, 2092.17, 0.00))
       [C] RectTransform
       [C] CanvasRenderer
       [C] TextMeshProUGUI
-    - RestartButton (Pos: (540.00, 418.00, 0.00))
+    - RestartButton (Pos: (585.00, 452.83, 0.00))
       [C] RectTransform
       [C] CanvasRenderer
       [C] Image
       [C] Button
-      - Text (TMP) (Pos: (540.00, 418.00, 0.00))
+      - Text (TMP) (Pos: (585.00, 452.83, 0.00))
         [C] RectTransform
         [C] CanvasRenderer
         [C] TextMeshProUGUI
-    - NextButton (Pos: (540.00, 222.00, 0.00))
+    - NextButton (Pos: (585.00, 240.50, 0.00))
       [C] RectTransform
       [C] CanvasRenderer
       [C] Image
       [C] Button
-      - Text (TMP) (Pos: (540.00, 222.00, 0.00))
+      - Text (TMP) (Pos: (585.00, 240.50, 0.00))
+        [C] RectTransform
+        [C] CanvasRenderer
+        [C] TextMeshProUGUI
+    - LevelSelect (Pos: (585.00, 676.00, 0.00))
+      [C] RectTransform
+      [C] CanvasRenderer
+      [C] Image
+      [C] Button
+      - Text (TMP) (Pos: (585.00, 676.00, 0.00))
         [C] RectTransform
         [C] CanvasRenderer
         [C] TextMeshProUGUI
@@ -164,7 +173,7 @@
     [C] Transform
     [C] SpriteRenderer
     [C] BoxCollider2D
-  - Wall_1_1 (Pos: (-2.00, -2.00, 0.00))
+  - Wall_1_5 (Pos: (-2.00, 2.00, 0.00))
     [C] Transform
     [C] SpriteRenderer
     [C] BoxCollider2D
@@ -204,7 +213,7 @@
     [C] Transform
     [C] SpriteRenderer
     [C] Block
-  - Target_04 (Pos: (-2.00, 2.00, 0.00))
+  - Target_04 (Pos: (-2.00, -2.00, 0.00))
     [C] Transform
     [C] SpriteRenderer
     [C] Block

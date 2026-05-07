@@ -176,9 +176,9 @@ public class LevelManager : MonoBehaviour
         GameObject wall = Instantiate(wallPrefab, worldPos, Quaternion.identity, transform);
         wall.name = $"Wall_{gridPos.x}_{gridPos.y}";
 
-        // Color the wall
-        SpriteRenderer sr = wall.GetComponentInChildren<SpriteRenderer>();
-        if (sr != null) sr.color = wallColor;
+        // We no longer override the wall color here, so the prefab's color takes effect.
+        // SpriteRenderer sr = wall.GetComponentInChildren<SpriteRenderer>();
+        // if (sr != null) sr.color = wallColor;
 
         spawnedWalls.Add(wall);
     }

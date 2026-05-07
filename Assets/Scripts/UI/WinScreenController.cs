@@ -69,4 +69,13 @@ public class WinScreenController : MonoBehaviour
     {
         GameManager.Instance.LoadNextLevel();
     }
+
+    /// <summary>
+    /// Link this to a "Level Select" Button's OnClick event in the Inspector.
+    /// Returns the player to the level select screen.
+    /// </summary>
+    public void OnLevelSelectClicked()
+    {
+        GameManager.Instance.GoToLevelSelect();
+    }
 }

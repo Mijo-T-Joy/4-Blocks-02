@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 /// <summary>
 /// The BRAIN of the game — centralized controller that coordinates everything.
@@ -69,11 +70,8 @@ public class GameManager : MonoBehaviour
     public WinScreenController winScreenController;
 
     [Header("Level")]
-    [Tooltip("The level to load when the game starts (fallback if sequence is empty)")]
-    public LevelData startingLevel;
-
-    [Tooltip("Drag all Level_01, Level_02, etc. here in order!")]
-    public LevelData[] levelSequence;
+    [Tooltip("Drag the LevelRegistry asset here")]
+    public LevelRegistry levelRegistry;
     
     private int currentLevelIndex = -1;
 
@@ -152,38 +150,20 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
-        // If we have a sequence defined, start at index 0
-        if (levelSequence != null && levelSequence.Length > 0)
+        if (levelRegistry == null || levelRegistry.levels == null || levelRegistry.levels.Length == 0)
         {
-            currentLevelIndex = 0;
+            Debug.LogWarning("GameManager: No LevelRegistry assigned or it's empty!");
+            return;
+        }
 
-            // If a specific starting level is assigned, try to find it in the sequence
-            if (startingLevel != null)
-            {
-                int index = System.Array.IndexOf(levelSequence, startingLevel);
-                if (index != -1)
-                {
-                    currentLevelIndex = index; // Found it! Start sequence from here.
-                }
-                else
-                {
-                    // It's not in the sequence at all, so just load it in isolation
-                    LoadLevel(startingLevel);
-                    return;
-                }
-            }
+        // Read the level chosen from the Level Select screen
+        currentLevelIndex = Mathf.Clamp(
+            LevelSelectController.SelectedLevelIndex,
+            0,
+            levelRegistry.levels.Length - 1
+        );
 
-            LoadLevel(levelSequence[currentLevelIndex]);
-        }
-        else if (startingLevel != null)
-        {
-            // Fallback for testing a single level
-            LoadLevel(startingLevel);
-        }
-        else
-        {
-            Debug.LogWarning("GameManager: No starting level or sequence assigned!");
-        }
+        LoadLevel(levelRegistry.levels[currentLevelIndex]);
     }
 
     // ──────────────────────────────────────────────
@@ -475,6 +455,9 @@ public class GameManager : MonoBehaviour
         CurrentState = GameState.Won;
         Debug.Log("🎉 Level Complete in " + moveCount + " moves!");
 
+        // Save progress
+        LevelProgressManager.CompleteLevel(currentLevelIndex);
+
         if (winScreenController != null)
         {
             winScreenController.Show(moveCount);
@@ -546,17 +529,34 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public void LoadNextLevel()
     {
-        // Check if we have a sequence and aren't at the very end
-        if (levelSequence != null && levelSequence.Length > 0 && currentLevelIndex < levelSequence.Length - 1)
+        if (levelRegistry != null && levelRegistry.levels.Length > 0
+            && currentLevelIndex < levelRegistry.levels.Length - 1)
         {
             currentLevelIndex++;
-            LoadLevel(levelSequence[currentLevelIndex]);
+
+            // Unsubscribe from old blocks
+            if (blocks != null)
+            {
+                foreach (Block block in blocks)
+                {
+                    block.OnStopped -= OnBlockStopped;
+                }
+            }
+
+            LoadLevel(levelRegistry.levels[currentLevelIndex]);
         }
         else
         {
-            // No more levels, or sequence isn't set up! Just restart current level.
-            Debug.Log("You beat all levels! Restarting the current one.");
-            RestartLevel();
+            Debug.Log("You beat all levels! Returning to level select.");
+            GoToLevelSelect();
         }
+    }
+
+    /// <summary>
+    /// Returns to the Level Select scene.
+    /// </summary>
+    public void GoToLevelSelect()
+    {
+        SceneManager.LoadScene("LevelSelect");
     }
 }
