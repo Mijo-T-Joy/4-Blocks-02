@@ -49,33 +49,17 @@ public class GridSystem : MonoBehaviour
         gridWidth = levelData.gridWidth;
         gridHeight = levelData.gridHeight;
 
-        // +2 in each dimension to include boundary walls on all sides
-        // So a 5×5 play area actually creates a 7×7 grid internally
-        // The playable cells are at positions (1,1) through (5,5)
-        wallGrid = new bool[gridWidth + 2, gridHeight + 2];
-
-        // Mark boundary walls (top, bottom, left, right edges)
-        for (int x = 0; x < gridWidth + 2; x++)
-        {
-            wallGrid[x, 0] = true;                  // Bottom row
-            wallGrid[x, gridHeight + 1] = true;     // Top row
-        }
-        for (int y = 0; y < gridHeight + 2; y++)
-        {
-            wallGrid[0, y] = true;                  // Left column
-            wallGrid[gridWidth + 1, y] = true;      // Right column
-        }
+        // Initialize wall grid directly to the play area dimensions
+        wallGrid = new bool[gridWidth, gridHeight];
 
         // Mark interior walls from the level data
-        // Interior wall positions in LevelData are in PLAY AREA coords (0-based)
-        // so we offset by +1 to account for the boundary wall ring
         if (levelData.wallPositions != null)
         {
             foreach (Vector2Int wallPos in levelData.wallPositions)
             {
-                int gx = wallPos.x + 1;
-                int gy = wallPos.y + 1;
-                if (gx >= 0 && gx < gridWidth + 2 && gy >= 0 && gy < gridHeight + 2)
+                int gx = wallPos.x;
+                int gy = wallPos.y;
+                if (gx >= 0 && gx < gridWidth && gy >= 0 && gy < gridHeight)
                 {
                     wallGrid[gx, gy] = true;
                 }
@@ -92,8 +76,8 @@ public class GridSystem : MonoBehaviour
     /// </summary>
     public Vector2Int WorldToGrid(Vector3 worldPosition)
     {
-        float offsetX = (gridWidth + 2) / 2f;
-        float offsetY = (gridHeight + 2) / 2f;
+        float offsetX = gridWidth / 2f;
+        float offsetY = gridHeight / 2f;
 
         // Floor to get the cell the position is in
         return new Vector2Int(
@@ -109,10 +93,10 @@ public class GridSystem : MonoBehaviour
     /// The offset ensures objects are centered in their cell and the grid
     /// is centered around the origin (0,0).
     /// </summary>
-    public Vector3 GridToWorld(Vector2Int gridPosition)
+    public Vector3 GridToWorld(Vector2Int gridPosition) 
     {
-        float offsetX = (gridWidth + 2) / 2f;
-        float offsetY = (gridHeight + 2) / 2f;
+        float offsetX = gridWidth / 2f;
+        float offsetY = gridHeight / 2f;
 
         return new Vector3(
             gridPosition.x + 0.5f - offsetX,
@@ -132,7 +116,7 @@ public class GridSystem : MonoBehaviour
         int y = gridPosition.y;
 
         // Out of bounds = treat as wall (safety)
-        if (x < 0 || x >= gridWidth + 2 || y < 0 || y >= gridHeight + 2)
+        if (x < 0 || x >= gridWidth || y < 0 || y >= gridHeight)
             return true;
 
         return wallGrid[x, y];
@@ -202,6 +186,6 @@ public class GridSystem : MonoBehaviour
     /// </summary>
     public Vector2Int PlayAreaToGrid(Vector2Int playAreaPos)
     {
-        return new Vector2Int(playAreaPos.x + 1, playAreaPos.y + 1);
+        return playAreaPos;
     }
 }

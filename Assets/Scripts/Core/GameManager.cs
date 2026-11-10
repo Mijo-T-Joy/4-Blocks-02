@@ -150,6 +150,11 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
+        if (AudioManager.Instance != null)
+        {
+            AudioManager.Instance.PlayBGM();
+        }
+
         if (levelRegistry == null || levelRegistry.levels == null || levelRegistry.levels.Length == 0)
         {
             Debug.LogWarning("GameManager: No LevelRegistry assigned or it's empty!");
@@ -454,6 +459,11 @@ public class GameManager : MonoBehaviour
         // All blocks on targets — PLAYER WINS!
         CurrentState = GameState.Won;
         Debug.Log("🎉 Level Complete in " + moveCount + " moves!");
+
+        if (AudioManager.Instance != null)
+        {
+            AudioManager.Instance.PlayWinSound();
+        }
 
         // Save progress
         LevelProgressManager.CompleteLevel(currentLevelIndex);

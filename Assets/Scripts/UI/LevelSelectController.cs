@@ -54,6 +54,10 @@ public class LevelSelectController : MonoBehaviour
 
     void Start()
     {
+        if (AudioManager.Instance != null)
+        {
+            AudioManager.Instance.PlayBGM();
+        }
         BuildLevelButtons();
     }
 
@@ -123,6 +127,10 @@ public class LevelSelectController : MonoBehaviour
     /// </summary>
     private void OnLevelClicked(int levelIndex)
     {
+        if (AudioManager.Instance != null)
+        {
+            AudioManager.Instance.PlayClickSound();
+        }
         SelectedLevelIndex = levelIndex;
         SceneManager.LoadScene(playSceneName);
     }

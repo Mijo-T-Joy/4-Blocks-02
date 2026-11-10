@@ -88,13 +88,12 @@ public class LevelManager : MonoBehaviour
         if (CurrentLevelData == null) return null;
 
         // Convert play-area coordinates from LevelData into actual Grid coordinates
-        // (remember: play area is offset by +1 to make room for boundary walls)
         Vector2Int[] gridTargets = new Vector2Int[4];
         for (int i = 0; i < 4; i++)
         {
             gridTargets[i] = new Vector2Int(
-                CurrentLevelData.blockTargetPositions[i].x + 1,
-                CurrentLevelData.blockTargetPositions[i].y + 1
+                CurrentLevelData.blockTargetPositions[i].x,
+                CurrentLevelData.blockTargetPositions[i].y
             );
         }
         return gridTargets;
@@ -135,27 +134,13 @@ public class LevelManager : MonoBehaviour
     /// </summary>
     private void SpawnWalls(LevelData level, GridSystem grid)
     {
-        // 1. Spawn boundary walls (the outer edge of the screen)
-        // A 5x5 grid means play area is x=1..5, y=1..5
-        // Boundary walls are at x=0, x=6 and y=0, y=6
-        for (int x = 0; x < level.gridWidth + 2; x++)
-        {
-            SpawnSingleWall(new Vector2Int(x, 0), grid);                   // Bottom
-            SpawnSingleWall(new Vector2Int(x, level.gridHeight + 1), grid); // Top
-        }
-        for (int y = 1; y <= level.gridHeight; y++)
-        {
-            SpawnSingleWall(new Vector2Int(0, y), grid);                   // Left
-            SpawnSingleWall(new Vector2Int(level.gridWidth + 1, y), grid); // Right
-        }
-
-        // 2. Spawn interior walls defined in LevelData
+        // Spawn walls defined in LevelData
         if (level.wallPositions != null)
         {
             foreach (Vector2Int playAreaPos in level.wallPositions)
             {
-                // Convert relative play-area pos (0,0) to absolute grid pos (1,1)
-                Vector2Int gridPos = new Vector2Int(playAreaPos.x + 1, playAreaPos.y + 1);
+                // Convert relative play-area pos to absolute grid pos
+                Vector2Int gridPos = new Vector2Int(playAreaPos.x, playAreaPos.y);
                 SpawnSingleWall(gridPos, grid);
             }
         }
@@ -198,10 +183,10 @@ public class LevelManager : MonoBehaviour
 
         for (int i = 0; i < 4; i++)
         {
-            // Level data stores positions relative to play area (starts at 0,0)
-            // Grid system needs absolute coordinates (starts at 1,1 due to boundary walls)
+            // Level data stores positions relative to play area
+            // Grid system uses absolute coordinates directly now
             Vector2Int startPos = level.blockStartPositions[i];
-            Vector2Int gridPos = new Vector2Int(startPos.x + 1, startPos.y + 1);
+            Vector2Int gridPos = new Vector2Int(startPos.x, startPos.y);
 
             Vector3 worldPos = grid.GridToWorld(gridPos);
             GameObject blockObj = Instantiate(blockPrefab, worldPos, Quaternion.identity, transform);
@@ -247,7 +232,7 @@ public class LevelManager : MonoBehaviour
         for (int i = 0; i < 4; i++)
         {
             Vector2Int targetPos = level.blockTargetPositions[i];
-            Vector2Int gridPos = new Vector2Int(targetPos.x + 1, targetPos.y + 1);
+            Vector2Int gridPos = new Vector2Int(targetPos.x, targetPos.y);
             Vector3 worldPos = grid.GridToWorld(gridPos);
 
             GameObject targetObj = Instantiate(targetPrefab, worldPos, Quaternion.identity, transform);

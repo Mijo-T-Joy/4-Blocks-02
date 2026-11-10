@@ -5,64 +5,72 @@
   [C] AudioListener
   [C] CameraScaler
   [C] SwipeDetector
-- Canvas (Pos: (585.00, 1266.00, 0.00))
+- Canvas (Pos: (642.00, 1389.00, 0.00))
   [C] RectTransform
   [C] Canvas
   [C] CanvasScaler
   [C] GraphicRaycaster
-  - HUD_Panel (Pos: (585.00, 1266.00, 0.00))
+  - HUD_Panel (Pos: (642.00, 1389.00, 0.00))
     [C] RectTransform
     [C] CanvasRenderer
     [C] Image
     [C] HUDController
-    - MovesText (Pos: (270.83, 2337.00, 0.00))
+    - MovesText (Pos: (297.22, 2564.00, 0.00))
       [C] RectTransform
       [C] CanvasRenderer
       [C] TextMeshProUGUI
-    - LevelNameText (Pos: (899.17, 2337.00, 0.00))
+    - LevelNameText (Pos: (986.78, 2564.00, 0.00))
       [C] RectTransform
       [C] CanvasRenderer
       [C] TextMeshProUGUI
-  - WinScreen_Panel (Pos: (585.00, 1266.00, 0.00))
+  - WinScreen_Panel (Pos: (642.00, 1389.00, 0.00))
     [C] RectTransform
     [C] CanvasRenderer
     [C] Image
     [C] WinScreenController
-    - TitleText (Pos: (585.00, 1482.67, 0.00))
+    - TitleText (Pos: (642.00, 1626.78, 0.00))
       [C] RectTransform
       [C] CanvasRenderer
       [C] TextMeshProUGUI
-    - FinalMovesText (Pos: (585.00, 2092.17, 0.00))
+    - FinalMovesText (Pos: (642.00, 2295.31, 0.00))
       [C] RectTransform
       [C] CanvasRenderer
       [C] TextMeshProUGUI
-    - RestartButton (Pos: (585.00, 452.83, 0.00))
+    - ButtonGrid (Pos: (642.00, 1448.44, 0.00))
       [C] RectTransform
       [C] CanvasRenderer
-      [C] Image
-      [C] Button
-      - Text (TMP) (Pos: (585.00, 452.83, 0.00))
+      [C] RawImage
+      [C] GridLayoutGroup
+      - RestartButton (Pos: (118.89, 237.78, 0.00))
         [C] RectTransform
         [C] CanvasRenderer
-        [C] TextMeshProUGUI
-    - NextButton (Pos: (585.00, 240.50, 0.00))
-      [C] RectTransform
-      [C] CanvasRenderer
-      [C] Image
-      [C] Button
-      - Text (TMP) (Pos: (585.00, 240.50, 0.00))
+        [C] Image
+        [C] Button
+        - Text (TMP) (Pos: (118.89, 237.78, 0.00))
+          [C] RectTransform
+          [C] CanvasRenderer
+          [C] TextMeshProUGUI
+      - NextButton (Pos: (118.89, 237.78, 0.00))
         [C] RectTransform
         [C] CanvasRenderer
-        [C] TextMeshProUGUI
-    - LevelSelect (Pos: (585.00, 676.00, 0.00))
-      [C] RectTransform
-      [C] CanvasRenderer
-      [C] Image
-      [C] Button
-      - Text (TMP) (Pos: (585.00, 676.00, 0.00))
+        [C] Image
+        [C] Button
+        - Text (TMP) (Pos: (118.89, 237.78, 0.00))
+          [C] RectTransform
+          [C] CanvasRenderer
+          [C] TextMeshProUGUI
+      - LevelSelect (Pos: (118.89, 237.78, 0.00))
         [C] RectTransform
         [C] CanvasRenderer
-        [C] TextMeshProUGUI
+        [C] Image
+        [C] Button
+        - Text (TMP) (Pos: (118.89, 237.78, 0.00))
+          [C] RectTransform
+          [C] CanvasRenderer
+          [C] TextMeshProUGUI
+- Background (Pos: (0.00, -0.96, 0.00))
+  [C] Transform
+  [C] SpriteRenderer
 - EventSystem (Pos: (0.00, 0.00, 0.00))
   [C] Transform
   [C] EventSystem
@@ -77,103 +85,99 @@
 - LevelManager (Pos: (0.00, 0.00, 0.00))
   [C] Transform
   [C] LevelManager
-  - Wall_0_0 (Pos: (-3.00, -3.00, 0.00))
+  - Wall_0_0 (Pos: (-2.00, -2.00, 0.00))
     [C] Transform
     [C] SpriteRenderer
     [C] BoxCollider2D
-  - Wall_0_6 (Pos: (-3.00, 3.00, 0.00))
+  - Wall_-1_0 (Pos: (-3.00, -2.00, 0.00))
     [C] Transform
     [C] SpriteRenderer
     [C] BoxCollider2D
-  - Wall_1_0 (Pos: (-2.00, -3.00, 0.00))
+  - Wall_-1_1 (Pos: (-3.00, -1.00, 0.00))
     [C] Transform
     [C] SpriteRenderer
     [C] BoxCollider2D
-  - Wall_1_6 (Pos: (-2.00, 3.00, 0.00))
+  - Wall_-1_2 (Pos: (-3.00, 0.00, 0.00))
     [C] Transform
     [C] SpriteRenderer
     [C] BoxCollider2D
-  - Wall_2_0 (Pos: (-1.00, -3.00, 0.00))
+  - Wall_-1_3 (Pos: (-3.00, 1.00, 0.00))
     [C] Transform
     [C] SpriteRenderer
     [C] BoxCollider2D
-  - Wall_2_6 (Pos: (-1.00, 3.00, 0.00))
+  - Wall_-1_4 (Pos: (-3.00, 2.00, 0.00))
     [C] Transform
     [C] SpriteRenderer
     [C] BoxCollider2D
-  - Wall_3_0 (Pos: (0.00, -3.00, 0.00))
+  - Wall_-1_5 (Pos: (-3.00, 3.00, 0.00))
     [C] Transform
     [C] SpriteRenderer
     [C] BoxCollider2D
-  - Wall_3_6 (Pos: (0.00, 3.00, 0.00))
+  - Wall_0_5 (Pos: (-2.00, 3.00, 0.00))
     [C] Transform
     [C] SpriteRenderer
     [C] BoxCollider2D
-  - Wall_4_0 (Pos: (1.00, -3.00, 0.00))
+  - Wall_1_5 (Pos: (-1.00, 3.00, 0.00))
     [C] Transform
     [C] SpriteRenderer
     [C] BoxCollider2D
-  - Wall_4_6 (Pos: (1.00, 3.00, 0.00))
+  - Wall_2_5 (Pos: (0.00, 3.00, 0.00))
     [C] Transform
     [C] SpriteRenderer
     [C] BoxCollider2D
-  - Wall_5_0 (Pos: (2.00, -3.00, 0.00))
+  - Wall_3_5 (Pos: (1.00, 3.00, 0.00))
     [C] Transform
     [C] SpriteRenderer
     [C] BoxCollider2D
-  - Wall_5_6 (Pos: (2.00, 3.00, 0.00))
+  - Wall_4_5 (Pos: (2.00, 3.00, 0.00))
     [C] Transform
     [C] SpriteRenderer
     [C] BoxCollider2D
-  - Wall_6_0 (Pos: (3.00, -3.00, 0.00))
+  - Wall_5_5 (Pos: (3.00, 3.00, 0.00))
     [C] Transform
     [C] SpriteRenderer
     [C] BoxCollider2D
-  - Wall_6_6 (Pos: (3.00, 3.00, 0.00))
+  - Wall_5_4 (Pos: (3.00, 2.00, 0.00))
     [C] Transform
     [C] SpriteRenderer
     [C] BoxCollider2D
-  - Wall_0_1 (Pos: (-3.00, -2.00, 0.00))
+  - Wall_5_3 (Pos: (3.00, 1.00, 0.00))
     [C] Transform
     [C] SpriteRenderer
     [C] BoxCollider2D
-  - Wall_6_1 (Pos: (3.00, -2.00, 0.00))
+  - Wall_5_2 (Pos: (3.00, 0.00, 0.00))
     [C] Transform
     [C] SpriteRenderer
     [C] BoxCollider2D
-  - Wall_0_2 (Pos: (-3.00, -1.00, 0.00))
+  - Wall_5_1 (Pos: (3.00, -1.00, 0.00))
     [C] Transform
     [C] SpriteRenderer
     [C] BoxCollider2D
-  - Wall_6_2 (Pos: (3.00, -1.00, 0.00))
+  - Wall_5_0 (Pos: (3.00, -2.00, 0.00))
     [C] Transform
     [C] SpriteRenderer
     [C] BoxCollider2D
-  - Wall_0_3 (Pos: (-3.00, 0.00, 0.00))
+  - Wall_5_-1 (Pos: (3.00, -3.00, 0.00))
     [C] Transform
     [C] SpriteRenderer
     [C] BoxCollider2D
-  - Wall_6_3 (Pos: (3.00, 0.00, 0.00))
+  - Wall_4_-1 (Pos: (2.00, -3.00, 0.00))
     [C] Transform
     [C] SpriteRenderer
     [C] BoxCollider2D
-  - Wall_0_4 (Pos: (-3.00, 1.00, 0.00))
+  - Wall_3_-1 (Pos: (1.00, -3.00, 0.00))
     [C] Transform
     [C] SpriteRenderer
     [C] BoxCollider2D
-  - Wall_6_4 (Pos: (3.00, 1.00, 0.00))
+  - Wall_2_-1 (Pos: (0.00, -3.00, 0.00))
     [C] Transform
     [C] SpriteRenderer
     [C] BoxCollider2D
-  - Wall_0_5 (Pos: (-3.00, 2.00, 0.00))
+  - Wall_1_-1 (Pos: (-1.00, -3.00, 0.00))
     [C] Transform
     [C] SpriteRenderer
     [C] BoxCollider2D
-  - Wall_6_5 (Pos: (3.00, 2.00, 0.00))
-    [C] Transform
-    [C] SpriteRenderer
-    [C] BoxCollider2D
-  - Wall_1_5 (Pos: (-2.00, 2.00, 0.00))
+  - Wall_0_-1 (Pos: (-2.00, -3.00, 0.00))
     [C] Transform
     [C] SpriteRenderer
     [C] BoxCollider2D
@@ -213,10 +217,12 @@
     [C] Transform
     [C] SpriteRenderer
     [C] Block
-  - Target_04 (Pos: (-2.00, -2.00, 0.00))
+  - Target_04 (Pos: (-2.00, 2.00, 0.00))
     [C] Transform
     [C] SpriteRenderer
     [C] Block
-- Background (Pos: (0.00, 0.00, 0.00))
-  [C] Transform
-  [C] SpriteRenderer
+- BGCanvas (Pos: (0.00, 0.00, 0.00))
+  [C] RectTransform
+  [C] Canvas
+  [C] CanvasScaler
+  [C] GraphicRaycaster

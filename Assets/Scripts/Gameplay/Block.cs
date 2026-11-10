@@ -130,6 +130,11 @@ public class Block : MonoBehaviour
             IsSliding = false;
             HasTarget = false;
 
+            // if (AudioManager.Instance != null)
+            // {
+            //     AudioManager.Instance.PlayHitSound();
+            // }
+
             // Notify GameManager that this block has stopped
             OnStopped?.Invoke();
         }
@@ -170,6 +175,11 @@ public class Block : MonoBehaviour
     {
         if (!HasTarget) return;
         IsSliding = true;
+
+        if (AudioManager.Instance != null)
+        {
+            AudioManager.Instance.PlaySlideSound();
+        }
     }
 
     /// <summary>
