@@ -155,18 +155,21 @@ public class GameManager : MonoBehaviour
             AudioManager.Instance.PlayBGM();
         }
 
+        // Validate LevelRegistry and selected level index
         if (levelRegistry == null || levelRegistry.levels == null || levelRegistry.levels.Length == 0)
         {
-            Debug.LogWarning("GameManager: No LevelRegistry assigned or it's empty!");
+            Debug.LogError("GameManager: LevelRegistry missing or empty – cannot load any level.");
             return;
         }
 
         // Read the level chosen from the Level Select screen
-        currentLevelIndex = Mathf.Clamp(
-            LevelSelectController.SelectedLevelIndex,
-            0,
-            levelRegistry.levels.Length - 1
-        );
+        int selectedIdx = LevelSelectController.SelectedLevelIndex;
+        if (selectedIdx < 0 || selectedIdx >= levelRegistry.levels.Length)
+        {
+            Debug.LogWarning($"GameManager: SelectedLevelIndex {selectedIdx} out of range – clamping to 0.");
+            selectedIdx = 0;
+        }
+        currentLevelIndex = selectedIdx;
 
         LoadLevel(levelRegistry.levels[currentLevelIndex]);
     }

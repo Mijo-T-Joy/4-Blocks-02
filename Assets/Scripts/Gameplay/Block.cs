@@ -195,7 +195,8 @@ public class Block : MonoBehaviour
         targetGridPosition = gridPosition;
         Vector3 worldPos = gridSystem.GridToWorld(gridPosition);
         transform.position = worldPos;
-        rb.position = worldPos;
+        if (rb == null) rb = GetComponent<Rigidbody2D>();
+        if (rb != null) rb.position = worldPos;
         IsSliding = false;
         HasTarget = false;
     }

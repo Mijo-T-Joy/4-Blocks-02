@@ -68,7 +68,7 @@
           [C] RectTransform
           [C] CanvasRenderer
           [C] TextMeshProUGUI
-- Background (Pos: (0.00, -0.96, 0.00))
+- Background (Pos: (0.00, 0.00, 0.00))
   [C] Transform
   [C] SpriteRenderer
 - EventSystem (Pos: (0.00, 0.00, 0.00))
@@ -85,142 +85,218 @@
 - LevelManager (Pos: (0.00, 0.00, 0.00))
   [C] Transform
   [C] LevelManager
-  - Wall_0_0 (Pos: (-2.00, -2.00, 0.00))
+  - PuzzleBoard (Pos: (0.00, 0.00, 0.00))
+    [C] Transform
+    - BoardShadow (Pos: (0.15, -0.18, 0.00))
+      [C] Transform
+      [C] SpriteRenderer
+    - GlassPlate (Pos: (0.00, 0.00, 0.00))
+      [C] Transform
+      [C] SpriteRenderer
+    - GridCell_2_0 (Pos: (-0.50, -2.50, 0.00))
+      [C] Transform
+      [C] SpriteRenderer
+    - GridCell_4_0 (Pos: (1.50, -2.50, 0.00))
+      [C] Transform
+      [C] SpriteRenderer
+    - TargetCellFrame_5_0 (Pos: (2.50, -2.50, 0.00))
+      [C] Transform
+      [C] SpriteRenderer
+    - GridCell_0_1 (Pos: (-2.50, -1.50, 0.00))
+      [C] Transform
+      [C] SpriteRenderer
+    - GridCell_1_1 (Pos: (-1.50, -1.50, 0.00))
+      [C] Transform
+      [C] SpriteRenderer
+    - GridCell_2_1 (Pos: (-0.50, -1.50, 0.00))
+      [C] Transform
+      [C] SpriteRenderer
+    - GridCell_3_1 (Pos: (0.50, -1.50, 0.00))
+      [C] Transform
+      [C] SpriteRenderer
+    - GridCell_5_1 (Pos: (2.50, -1.50, 0.00))
+      [C] Transform
+      [C] SpriteRenderer
+    - GridCell_0_2 (Pos: (-2.50, -0.50, 0.00))
+      [C] Transform
+      [C] SpriteRenderer
+    - GridCell_1_2 (Pos: (-1.50, -0.50, 0.00))
+      [C] Transform
+      [C] SpriteRenderer
+    - GridCell_2_2 (Pos: (-0.50, -0.50, 0.00))
+      [C] Transform
+      [C] SpriteRenderer
+    - GridCell_3_2 (Pos: (0.50, -0.50, 0.00))
+      [C] Transform
+      [C] SpriteRenderer
+    - TargetCellFrame_5_2 (Pos: (2.50, -0.50, 0.00))
+      [C] Transform
+      [C] SpriteRenderer
+    - GridCell_0_3 (Pos: (-2.50, 0.50, 0.00))
+      [C] Transform
+      [C] SpriteRenderer
+    - GridCell_1_3 (Pos: (-1.50, 0.50, 0.00))
+      [C] Transform
+      [C] SpriteRenderer
+    - GridCell_2_3 (Pos: (-0.50, 0.50, 0.00))
+      [C] Transform
+      [C] SpriteRenderer
+    - GridCell_4_3 (Pos: (1.50, 0.50, 0.00))
+      [C] Transform
+      [C] SpriteRenderer
+    - TargetCellFrame_5_3 (Pos: (2.50, 0.50, 0.00))
+      [C] Transform
+      [C] SpriteRenderer
+    - GridCell_0_4 (Pos: (-2.50, 1.50, 0.00))
+      [C] Transform
+      [C] SpriteRenderer
+    - GridCell_1_4 (Pos: (-1.50, 1.50, 0.00))
+      [C] Transform
+      [C] SpriteRenderer
+    - GridCell_2_4 (Pos: (-0.50, 1.50, 0.00))
+      [C] Transform
+      [C] SpriteRenderer
+    - GridCell_3_4 (Pos: (0.50, 1.50, 0.00))
+      [C] Transform
+      [C] SpriteRenderer
+    - GridCell_4_4 (Pos: (1.50, 1.50, 0.00))
+      [C] Transform
+      [C] SpriteRenderer
+    - GridCell_2_5 (Pos: (-0.50, 2.50, 0.00))
+      [C] Transform
+      [C] SpriteRenderer
+    - GridCell_3_5 (Pos: (0.50, 2.50, 0.00))
+      [C] Transform
+      [C] SpriteRenderer
+    - GridCell_4_5 (Pos: (1.50, 2.50, 0.00))
+      [C] Transform
+      [C] SpriteRenderer
+    - TargetCellFrame_5_5 (Pos: (2.50, 2.50, 0.00))
+      [C] Transform
+      [C] SpriteRenderer
+    - WallCross_4_1 (Pos: (1.50, -1.50, 0.00))
+      [C] Transform
+      [C] SpriteRenderer
+    - WallCross_3_3 (Pos: (0.50, 0.50, 0.00))
+      [C] Transform
+      [C] SpriteRenderer
+    - WallCross_4_2 (Pos: (1.50, -0.50, 0.00))
+      [C] Transform
+      [C] SpriteRenderer
+    - PlayableAreaBorder (Pos: (0.00, 0.00, 0.00))
+      [C] Transform
+      [C] SpriteRenderer
+  - Wall_0_0 (Pos: (-2.50, -2.50, 0.00))
     [C] Transform
     [C] SpriteRenderer
     [C] BoxCollider2D
-  - Wall_-1_0 (Pos: (-3.00, -2.00, 0.00))
+    - Shadow (Pos: (-2.42, -2.59, 0.00))
+      [C] Transform
+      [C] SpriteRenderer
+  - Wall_1_5 (Pos: (-1.50, 2.50, 0.00))
     [C] Transform
     [C] SpriteRenderer
     [C] BoxCollider2D
-  - Wall_-1_1 (Pos: (-3.00, -1.00, 0.00))
+    - Shadow (Pos: (-1.42, 2.41, 0.00))
+      [C] Transform
+      [C] SpriteRenderer
+  - Wall_0_5 (Pos: (-2.50, 2.50, 0.00))
     [C] Transform
     [C] SpriteRenderer
     [C] BoxCollider2D
-  - Wall_-1_2 (Pos: (-3.00, 0.00, 0.00))
+    - Shadow (Pos: (-2.42, 2.41, 0.00))
+      [C] Transform
+      [C] SpriteRenderer
+  - Wall_5_4 (Pos: (2.50, 1.50, 0.00))
     [C] Transform
     [C] SpriteRenderer
     [C] BoxCollider2D
-  - Wall_-1_3 (Pos: (-3.00, 1.00, 0.00))
+    - Shadow (Pos: (2.58, 1.41, 0.00))
+      [C] Transform
+      [C] SpriteRenderer
+  - Wall_1_0 (Pos: (-1.50, -2.50, 0.00))
     [C] Transform
     [C] SpriteRenderer
     [C] BoxCollider2D
-  - Wall_-1_4 (Pos: (-3.00, 2.00, 0.00))
+    - Shadow (Pos: (-1.42, -2.59, 0.00))
+      [C] Transform
+      [C] SpriteRenderer
+  - Wall_3_0 (Pos: (0.50, -2.50, 0.00))
     [C] Transform
     [C] SpriteRenderer
     [C] BoxCollider2D
-  - Wall_-1_5 (Pos: (-3.00, 3.00, 0.00))
+    - Shadow (Pos: (0.58, -2.59, 0.00))
+      [C] Transform
+      [C] SpriteRenderer
+  - Wall_4_1 (Pos: (1.50, -1.50, 0.00))
     [C] Transform
     [C] SpriteRenderer
     [C] BoxCollider2D
-  - Wall_0_5 (Pos: (-2.00, 3.00, 0.00))
+    - Shadow (Pos: (1.58, -1.59, 0.00))
+      [C] Transform
+      [C] SpriteRenderer
+  - Wall_3_3 (Pos: (0.50, 0.50, 0.00))
     [C] Transform
     [C] SpriteRenderer
     [C] BoxCollider2D
-  - Wall_1_5 (Pos: (-1.00, 3.00, 0.00))
+    - Shadow (Pos: (0.58, 0.41, 0.00))
+      [C] Transform
+      [C] SpriteRenderer
+  - Wall_4_2 (Pos: (1.50, -0.50, 0.00))
     [C] Transform
     [C] SpriteRenderer
     [C] BoxCollider2D
-  - Wall_2_5 (Pos: (0.00, 3.00, 0.00))
-    [C] Transform
-    [C] SpriteRenderer
-    [C] BoxCollider2D
-  - Wall_3_5 (Pos: (1.00, 3.00, 0.00))
-    [C] Transform
-    [C] SpriteRenderer
-    [C] BoxCollider2D
-  - Wall_4_5 (Pos: (2.00, 3.00, 0.00))
-    [C] Transform
-    [C] SpriteRenderer
-    [C] BoxCollider2D
-  - Wall_5_5 (Pos: (3.00, 3.00, 0.00))
-    [C] Transform
-    [C] SpriteRenderer
-    [C] BoxCollider2D
-  - Wall_5_4 (Pos: (3.00, 2.00, 0.00))
-    [C] Transform
-    [C] SpriteRenderer
-    [C] BoxCollider2D
-  - Wall_5_3 (Pos: (3.00, 1.00, 0.00))
-    [C] Transform
-    [C] SpriteRenderer
-    [C] BoxCollider2D
-  - Wall_5_2 (Pos: (3.00, 0.00, 0.00))
-    [C] Transform
-    [C] SpriteRenderer
-    [C] BoxCollider2D
-  - Wall_5_1 (Pos: (3.00, -1.00, 0.00))
-    [C] Transform
-    [C] SpriteRenderer
-    [C] BoxCollider2D
-  - Wall_5_0 (Pos: (3.00, -2.00, 0.00))
-    [C] Transform
-    [C] SpriteRenderer
-    [C] BoxCollider2D
-  - Wall_5_-1 (Pos: (3.00, -3.00, 0.00))
-    [C] Transform
-    [C] SpriteRenderer
-    [C] BoxCollider2D
-  - Wall_4_-1 (Pos: (2.00, -3.00, 0.00))
-    [C] Transform
-    [C] SpriteRenderer
-    [C] BoxCollider2D
-  - Wall_3_-1 (Pos: (1.00, -3.00, 0.00))
-    [C] Transform
-    [C] SpriteRenderer
-    [C] BoxCollider2D
-  - Wall_2_-1 (Pos: (0.00, -3.00, 0.00))
-    [C] Transform
-    [C] SpriteRenderer
-    [C] BoxCollider2D
-  - Wall_1_-1 (Pos: (-1.00, -3.00, 0.00))
-    [C] Transform
-    [C] SpriteRenderer
-    [C] BoxCollider2D
-  - Wall_0_-1 (Pos: (-2.00, -3.00, 0.00))
-    [C] Transform
-    [C] SpriteRenderer
-    [C] BoxCollider2D
-  - Block_01 (Pos: (-1.00, -1.00, 0.00))
+    - Shadow (Pos: (1.58, -0.59, 0.00))
+      [C] Transform
+      [C] SpriteRenderer
+  - Block_01 (Pos: (-1.50, -0.50, 0.00))
     [C] Transform
     [C] SpriteRenderer
     [C] Rigidbody2D
     [C] BoxCollider2D
     [C] Block
-  - Block_02 (Pos: (-1.00, 1.00, 0.00))
+    - Shadow (Pos: (-1.42, -0.59, 0.00))
+      [C] Transform
+      [C] SpriteRenderer
+  - Block_02 (Pos: (-0.50, -0.50, 0.00))
     [C] Transform
     [C] SpriteRenderer
     [C] Rigidbody2D
     [C] BoxCollider2D
     [C] Block
-  - Block_03 (Pos: (1.00, -1.00, 0.00))
+    - Shadow (Pos: (-0.42, -0.59, 0.00))
+      [C] Transform
+      [C] SpriteRenderer
+  - Block_03 (Pos: (-1.50, 0.50, 0.00))
     [C] Transform
     [C] SpriteRenderer
     [C] Rigidbody2D
     [C] BoxCollider2D
     [C] Block
-  - Block_04 (Pos: (1.00, 1.00, 0.00))
+    - Shadow (Pos: (-1.42, 0.41, 0.00))
+      [C] Transform
+      [C] SpriteRenderer
+  - Block_04 (Pos: (-0.50, 0.50, 0.00))
     [C] Transform
     [C] SpriteRenderer
     [C] Rigidbody2D
     [C] BoxCollider2D
     [C] Block
-  - Target_01 (Pos: (-2.00, -1.00, 0.00))
+    - Shadow (Pos: (-0.42, 0.41, 0.00))
+      [C] Transform
+      [C] SpriteRenderer
+  - Target_01 (Pos: (2.50, 0.50, 0.00))
     [C] Transform
     [C] SpriteRenderer
-    [C] Block
-  - Target_02 (Pos: (-2.00, 0.00, 0.00))
+  - Target_02 (Pos: (2.50, -2.50, 0.00))
     [C] Transform
     [C] SpriteRenderer
-    [C] Block
-  - Target_03 (Pos: (-2.00, 1.00, 0.00))
+  - Target_03 (Pos: (2.50, -0.50, 0.00))
     [C] Transform
     [C] SpriteRenderer
-    [C] Block
-  - Target_04 (Pos: (-2.00, 2.00, 0.00))
+  - Target_04 (Pos: (2.50, 2.50, 0.00))
     [C] Transform
     [C] SpriteRenderer
-    [C] Block
 - BGCanvas (Pos: (0.00, 0.00, 0.00))
   [C] RectTransform
   [C] Canvas

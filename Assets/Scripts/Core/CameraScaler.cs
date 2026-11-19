@@ -30,12 +30,40 @@ public class CameraScaler : MonoBehaviour
              "0.75 = iPad (3:4). Screens wider than this get black bars on the sides.")]
     public float maxAspectBeforePillarbox = 0.85f;
 
+    [Header("Background & Border Matching")]
+    [Tooltip("Optional background sprite renderer to scale and match camera bounds. Automatically finds 'Background' if unassigned.")]
+    public SpriteRenderer backgroundRenderer;
+
+    [Tooltip("Color applied to the camera background and outer border margin.")]
+    public Color borderColor = new Color(0.37f, 0.79f, 0.93f, 1f);
+
     private Camera cam;
     private float lastAspect;
 
     void Awake()
     {
         cam = GetComponent<Camera>();
+        if (backgroundRenderer == null)
+        {
+            GameObject bgObj = GameObject.Find("Background");
+            if (bgObj != null)
+            {
+                backgroundRenderer = bgObj.GetComponent<SpriteRenderer>();
+            }
+        }
+
+#if UNITY_EDITOR
+        if (backgroundRenderer != null)
+        {
+            Sprite grad = UnityEditor.AssetDatabase.LoadAssetAtPath<Sprite>("Assets/Images/BackgroundGradient.png");
+            if (grad != null)
+            {
+                backgroundRenderer.sprite = grad;
+                backgroundRenderer.color = Color.white;
+            }
+        }
+#endif
+
         AdjustCamera();
     }
 
@@ -51,6 +79,12 @@ public class CameraScaler : MonoBehaviour
 
     void AdjustCamera()
     {
+        if (cam == null) cam = GetComponent<Camera>();
+        if (cam != null)
+        {
+            cam.backgroundColor = borderColor;
+        }
+
         float referenceAspect = referenceWidth / referenceHeight; // 0.5625 for 9:16
         float currentAspect = (float)Screen.width / Screen.height;
         lastAspect = currentAspect;
@@ -83,6 +117,23 @@ public class CameraScaler : MonoBehaviour
             float offsetX = (1f - viewportWidth) / 2f;
 
             cam.rect = new Rect(offsetX, 0, viewportWidth, 1);
+        }
+
+        // Scale background sprite to seamlessly cover camera view on any device
+        if (backgroundRenderer != null && backgroundRenderer.sprite != null && cam != null)
+        {
+            float camHeight = 2f * cam.orthographicSize;
+            float camWidth = camHeight * cam.aspect;
+
+            Vector2 spriteSize = backgroundRenderer.sprite.rect.size / backgroundRenderer.sprite.pixelsPerUnit;
+            if (spriteSize.x > 0 && spriteSize.y > 0)
+            {
+                float scaleX = camWidth / spriteSize.x;
+                float scaleY = camHeight / spriteSize.y;
+                float scale = Mathf.Max(scaleX, scaleY);
+                backgroundRenderer.transform.localScale = new Vector3(scale, scale, 1f);
+                backgroundRenderer.transform.position = new Vector3(cam.transform.position.x, cam.transform.position.y, 0f);
+            }
         }
     }
 }

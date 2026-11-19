@@ -489,7 +489,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: -10
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 21300000, guid: 1244263ff1af7bc428bbb71b4efc24b5, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 7a93c4e201b84e1aa3948572111ef88b, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -1054,6 +1054,34 @@ MonoBehaviour:
   block3Color: {r: 0, g: 0.39, b: 1, a: 0.59}
   block4Color: {r: 0.99, g: 1, b: 0, a: 0.59}
   wallColor: {r: 1, g: 1, b: 1, a: 1}
+  showFrostedGlassBoard: 0
+  showBoardShadow: 0
+  showGridCellFrames: 1
+  showTargetCellFrame: 1
+  gridCellColor: {r: 1, g: 1, b: 1, a: 0.85}
+  showWallBlocks: 0
+  showIndependentWallCross: 1
+  showPlayableAreaBorder: 1
+  playableBorderColor: {r: 1, g: 1, b: 1, a: 0.95}
+  playableBorderThickness: 0.02
+  playableBorderCornerRadius: 0.144
+  boardGlassColor: {r: 0.42, g: 0.91, b: 0.83, a: 0.75}
+  boardShadowColor: {r: 0, g: 0.18, b: 0.2, a: 0.3}
+  blockShadowColor: {r: 0, g: 0.05, b: 0.1, a: 0.25}
+  blockShadowOffset: {x: 0.08, y: -0.09}
+  blockShadowSprite: {fileID: 21300000, guid: 8e5f2a10b4c849129d2b77a11223344a, type: 3}
+  boardShadowSprite: {fileID: 21300000, guid: 9a6f3b21c5d94823ae3c88b22334455b, type: 3}
+  frostedGlassBoardSprite: {fileID: 21300000, guid: 3f8a4e10c7b94928b5e61234a99d88cc, type: 3}
+  gridCellFrameSprite: {fileID: 21300000, guid: 5b7d9f21e8c04937a6f72345b00e99dd, type: 3}
+  targetCellFrameSprite: {fileID: 21300000, guid: b629ffe2cb4815748b46727602fa2294, type: 3}
+  gridCellDotSprite: {fileID: 21300000, guid: 5b7d9f21e8c04937a6f72345b00e99dd, type: 3}
+  targetDishSprite: {fileID: 21300000, guid: f7e8d9c0b1a24736b4e51098a77c77aa, type: 3}
+  independentWallCrossSprite: {fileID: 10917, guid: 0000000000000000f000000000000000, type: 0}
+  greenGemSprite: {fileID: 21300000, guid: c3d4e5f6a1b24738495061728394051c, type: 3}
+  redGemSprite: {fileID: 21300000, guid: a1b2c3d4e5f64718293041526374859a, type: 3}
+  blueGemSprite: {fileID: 21300000, guid: b2c3d4e5f6a14728394051627384950b, type: 3}
+  yellowGemSprite: {fileID: 21300000, guid: d4e5f6a1b2c34748596071829304152d, type: 3}
+  wallGemSprite: {fileID: 21300000, guid: e5f6a1b2c3d44758697081920314253e, type: 3}
 --- !u!4 &1375502453
 Transform:
   m_ObjectHideFlags: 0
@@ -1781,7 +1809,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 1
-  m_BackGroundColor: {r: 0, g: 0, b: 0, a: 0}
+  m_BackGroundColor: {r: 0.37, g: 0.79, b: 0.93, a: 1}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
@@ -1853,6 +1881,8 @@ MonoBehaviour:
   referenceHeight: 1920
   referenceOrthographicSize: 9.6
   maxAspectBeforePillarbox: 0.5
+  backgroundRenderer: {fileID: 0}
+  borderColor: {r: 0.37, g: 0.79, b: 0.93, a: 1}
 --- !u!114 &1676377511
 MonoBehaviour:
   m_ObjectHideFlags: 0

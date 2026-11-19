@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 4256683069693552288}
   - component: {fileID: 363205469338326355}
-  - component: {fileID: 5030741102278773112}
   m_Layer: 0
   m_Name: Target
   m_TagString: Untagged
@@ -82,27 +81,13 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 7482667652216324306, guid: db750325989564987a34393247d883b4, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 0.90588236}
+  m_Sprite: {fileID: 21300000, guid: f7e8d9c0b1a24736b4e51098a77c77aa, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 5.12, y: 5.12}
+  m_Size: {x: 1, y: 1}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
---- !u!114 &5030741102278773112
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1116611627271739473}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6dfd54533250dde488a21860c70c5db0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Block
-  slideSpeed: 15
-  snapThreshold: 0.05

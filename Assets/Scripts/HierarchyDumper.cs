@@ -3,6 +3,7 @@ using System.Text;
 
 public class HierarchyDumper : MonoBehaviour 
 {
+#if UNITY_EDITOR
     void Start() 
     {
         StringBuilder sb = new StringBuilder();
@@ -33,4 +34,5 @@ public class HierarchyDumper : MonoBehaviour
             
         }
     }
+#endif
 }
